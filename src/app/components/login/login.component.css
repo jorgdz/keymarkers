@@ -1,1 +1,5 @@
 @import './css/style.css';
+
+.image{
+ 	border-radius: 50%;
+}

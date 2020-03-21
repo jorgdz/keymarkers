@@ -222,7 +222,7 @@ iframe {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  overflow: hidden;
+  /*overflow: hidden;*/
   margin: 0 auto;
 }
 .login100-form-avatar img {

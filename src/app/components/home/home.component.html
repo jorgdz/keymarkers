@@ -1,0 +1,16 @@
+<div class="container">
+	<h1>{{ user.name }} {{ user.lastname }}</h1>
+	<h3>{{ user.email }}</h3>
+	
+	<picture class="login100-form-avatar" *ngIf="!user.image || user.image == 'null'">
+		<img src="./assets/images/avatar-01.jpg" width="140" height="100" class="image" />
+	</picture>
+	
+	<picture class="login100-form-avatar" *ngIf="user.image">
+		<img src="{{ user.image }}" class="image" width="140" height="100" />
+	</picture>
+
+	<div *ngIf="userLogged">
+		<a href="#" (click)="logout()">Cerrar sesión</a>
+	</div>
+</div>

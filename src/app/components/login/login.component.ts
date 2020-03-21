@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserLogin } from '../../models/user.login';
+import { User } from '../../models/user';
+import { Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -8,42 +12,46 @@ import { UserLogin } from '../../models/user.login';
 })
 export class LoginComponent implements OnInit {
   
-  	public user: UserLogin;
+  	public userLogin: UserLogin;
+  	public user: User;
 
-  	constructor() { 
-  		this.user = new UserLogin('', '');
+  	public lastLogin:any = {};
+
+  	constructor(private loginService: LoginService, private router: Router, private toastService:ToastrService) 
+  	{ 
+  		this.userLogin = new UserLogin();
+  		this.user = new User();
   	}
 
 	ngOnInit(): void {
-	
+		if ((localStorage.getItem('name') != '' && localStorage.getItem('name') != null) && (localStorage.getItem('photo') != '' && localStorage.getItem('photo') != null)) {
+			this.lastLogin = {
+				name: localStorage.getItem('name'),
+				photo: localStorage.getItem('photo')
+			}
+		}
 	}
 
   	login(form)
   	{
-  		console.log(this.user);
+  		this.loginService.login(this.userLogin).subscribe(
+
+			res => {
+				localStorage.removeItem('name');
+				localStorage.removeItem('photo');
+				this.loginService.setUserLoggedIn(res['data']['email']);
+				this.loginService.setToken(res['accessToken']);
+
+				this.toastService.success('Bienvenido ' + res['data']['email'], 'Ok');
+			},
+		  	error => {	
+	  			this.toastService.error(error.error.message, error.status);
+		  	},
+		  	() => this.navigate()
+		);
 	}
 
-	validateEmail()
-	{
-		if (this.user.email.trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) 
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	validatePass()
-	{
-		if (this.user.pass == null || this.user.pass == '') 
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
+ 	navigate() {    
+    	this.router.navigateByUrl('/home');
+  	}
 }

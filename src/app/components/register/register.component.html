@@ -1,0 +1,58 @@
+<div class="limiter">
+	<div class="container-login100" style="background-image: url('./assets/images/img-01.jpg');">
+		<div class="wrap-login100 p-t-100 p-b-30">
+			<form class="login100-form validate-form" #formRegister="ngForm" (ngSubmit)="register(formRegister)">	
+				<span class="login100-form-title p-t-20 p-b-20">
+					Crea una cuenta y empieza a ordenar yá, tus sitios favoritos.
+				</span>
+				<div class="wrap-input100 validate-input m-b-10" [class.alert-validate]="name.touched && !name.valid" data-validate = "Los nombres son requeridos">
+					<input class="input100" type="text" name="name" #name="ngModel" [(ngModel)]="user.name" placeholder="Nombres" required />
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-user"></i>
+					</span>
+				</div>
+
+				<div class="wrap-input100 validate-input m-b-10" [class.alert-validate]="lastname.touched && !lastname.valid" data-validate = "Los apellidos son requeridos">
+					<input class="input100" type="text" name="lastname" #lastname="ngModel" [(ngModel)]="user.lastname" placeholder="Apellidos" required />
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-user-plus"></i>
+					</span>
+				</div>
+
+				<div class="wrap-input100 validate-input m-b-10" [class.alert-validate]="email.touched && !email.valid" data-validate = "Correo no es válido">
+					<input class="input100" type="email" name="email" #email="ngModel" [(ngModel)]="user.email" placeholder="Correo" required pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" />
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-envelope-open"></i>
+					</span>
+				</div>
+
+				<div class="wrap-input100 validate-input m-b-10" [class.alert-validate]="password.touched && !password.valid" data-validate = "La contraseña es requerida">
+					<input class="input100" type="password" name="password" #password="ngModel" [(ngModel)]="user.password" placeholder="Contraseña" required />
+					<span class="focus-input100"></span>
+					<span class="symbol-input100">
+						<i class="fa fa-lock"></i>
+					</span>
+				</div>
+
+				<div class="container-login100-form-btn p-t-10">
+					<button type="submit" class="login100-form-btn" [disabled]="!formRegister.form.valid">
+						Registrar
+					</button>
+				</div>
+
+				<div class="text-center w-full p-t-25 p-b-50"></div>
+
+				<div class="text-center w-full">
+					<a class="txt1" [routerLink]="['/login']">
+						<i class="fa fa-long-arrow-left"></i>						
+						Regresar
+					</a>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
