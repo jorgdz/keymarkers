@@ -1,53 +1,110 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
-import { UserLogin } from '../../models/user.login';
+import { Folder } from '../../models/folder';
+
 import { LoginService } from '../../services/login.service';
+import { FolderService } from '../../services/folder.service';
+
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+
+declare var jQuery:any;
+declare var $:any;
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [FolderService]
 })
 export class HomeComponent implements OnInit {
 
   	public user:User;
+    public fecha:Date;
+    public folders: Array<Folder>;
 
-  	constructor(private loginService: LoginService, private router: Router, private toastService: ToastrService) 
+  	constructor(private loginService: LoginService, private folderService: FolderService, private router: Router) 
   	{ 
   		this.user = new User();
+      this.fecha = new Date();
   	}
   
+
   	public userLogged:User = this.loginService.getUserLoggedIn();
+  	public token = this.loginService.getToken();
+
 
   	ngOnInit(): void {
   		console.log('Home');
-
-  		let token = this.loginService.getToken();
-  		if (token != '' && token != null && this.userLogged != null) 
+   
+  		if ((this.token != '' && this.token != null && this.token != 'null' && this.token != undefined) && this.userLogged != null) 
   		{
-  			this.loginService.getUserAuth(token).subscribe(
+  			this.loginService.getUserAuth(this.token).subscribe(
   				res => {
     				this.user = res['data'];
-            		if ((localStorage.getItem('name') == '' || localStorage.getItem('name') == null) && (localStorage.getItem('photo') == '' || localStorage.getItem('photo') == null)) 
-            		{
-            			localStorage.setItem('name', this.user.name + ' ' + this.user.lastname);
-            			localStorage.setItem('photo', this.user.image);
-            		}
+
+            // VERFICO QUE NO ESTE ALMACENADO EL NOMBRE Y LA FOTO DEL USUARIO
+            let name = this.user.name + ' ' + this.user.lastname;
+        		if ((localStorage.getItem('name') == '' || localStorage.getItem('name') == null) && (localStorage.getItem('photo') == '' || localStorage.getItem('photo') == null)) 
+        		{
+              localStorage.setItem('name', name);
+        			localStorage.setItem('photo', this.user.image);
+        		}
+            else
+            {
+              if (localStorage.getItem('name') != name && localStorage.getItem('name') != '' && localStorage.getItem('name') != null) 
+              {
+                localStorage.removeItem('name');
+                localStorage.setItem('name', name);
+              }
+
+              if (localStorage.getItem('photo') != this.user.image && localStorage.getItem('photo') != '' && localStorage.getItem('photo') != null) 
+              {
+                localStorage.removeItem('photo');
+                localStorage.setItem('photo', this.user.image);
+              }
+            }
     			},
-				err => {
-					console.error(err);
-				}
+				  err => {
+					  console.error(err);
+				  }
   			);
-  		}
+      }
+      else
+      {
+        this.router.navigateByUrl('/');
+      }
+
+
+      // GET FOLDERS
+      this.getFolders();
   	}
 
 
+    getFolders ()
+    {
+      this.folderService.getFolders().subscribe(
+        res => {
+          this.folders = res['data']
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+
+    toggle ()
+    {
+      $("body").toggleClass("sidebar-toggled");
+      $(".sidebar").toggleClass("toggled");
+      if ($(".sidebar").hasClass("toggled")) {
+        $('.sidebar .collapse').collapse('hide');
+      };
+    }
+
   	logout() 
   	{
- 		this.loginService.logout();
- 		this.router.navigateByUrl('/login');
- 	}
+ 		  this.loginService.logout();
+      this.router.navigate(['/login']);
+ 	  }
 
 }

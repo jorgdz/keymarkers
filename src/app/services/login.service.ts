@@ -44,6 +44,7 @@ export class LoginService {
   {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
+    this.isUserLoggedIn = false;
     console.log('Bye !!!');
   }
 

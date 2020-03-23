@@ -1,0 +1,10 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h1 class="h3 mb-0 text-gray-800">{{ folder.name }}</h1>
+</div>
+
+<div class="row">
+	<p *ngIf="folder.description"> {{ folder.description }} </p>
+</div>
+<ul>
+	<li *ngFor="let marker of folder.markers">{{ marker.name }} -> {{ marker.link }}</li>
+</ul>

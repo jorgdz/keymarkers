@@ -1,0 +1,34 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h1 class="h3 mb-0 text-gray-800">Agregar nueva carpeta</h1>
+</div>
+<hr>
+<div class="card o-hidden border-0 shadow-lg my-5 col-lg-8">
+  	<div class="card-body p-0">
+    	<div class="row">
+        	<div class="col-md-12">
+          		<div class="p-5">
+		            <div class="text-center">
+		            	<h1 class="h4 text-gray-900 mb-4">Dale un buen nombre a tu carpeta.</h1>
+		            </div>
+            		<form class="user" #folderForm="ngForm" (ngSubmit)="save(folderForm)">
+	              		<div class="form-group row">
+	                		<div class="col-sm-6 mb-3 mb-sm-0">
+	                  			<input type="text" class="form-control form-control-user" #inputName="ngModel" name="name" [(ngModel)]="folder.name" id="exampleFirstName" placeholder="Nombre de la carpeta">
+	                		</div>
+              			</div>
+	              		<div class="form-group row">
+		                	<div class="col-sm-6 mb-3 mb-sm-0">
+		                 		<textarea class="form-control form-control-user" #inputDescription="ngModel" name="description" [(ngModel)]="folder.description"></textarea>
+		                	</div>
+	              		</div>
+              
+		              	<button type="submit" class="btn btn-primary btn-user">
+		              		Crear
+		              	</button>
+            		</form>   
+        		</div>
+      		</div>
+   		</div>
+  	</div>
+</div>
+	

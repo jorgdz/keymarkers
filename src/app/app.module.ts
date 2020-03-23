@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule, Routes} from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,6 +15,9 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { Error404Component } from './components/error404/error404.component';
+import { ProfileComponent } from './components/home/profile/profile.component';
+import { FolderComponent } from './components/home/folder/folder.component';
+import { AddfolderComponent } from './components/home/addfolder/addfolder.component';
 
 // SERVICES
 import { LoginService } from './services/login.service';
@@ -40,9 +43,26 @@ const routes:Routes = [
       canActivate: [LoggedGuard]
   },
   { 
-      path: 'home', 
+      path: 'keymarker', 
       component: HomeComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard],
+      children: [
+        {
+          path: 'profile',
+          component: ProfileComponent,
+          canActivate: [AuthGuard]
+        },
+        {
+          path: 'folder/:id',
+          component: FolderComponent,
+          canActivate: [AuthGuard]
+        },
+        {
+          path: 'add-folder',
+          component: AddfolderComponent,
+          canActivate: [AuthGuard]
+        }
+      ]
   },
   {
     path: '**',
@@ -56,11 +76,14 @@ const routes:Routes = [
     LoginComponent,
     HomeComponent,
     Error404Component,
-    RegisterComponent
+    RegisterComponent,
+    ProfileComponent,
+    FolderComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
     BrowserAnimationsModule,

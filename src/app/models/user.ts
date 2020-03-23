@@ -5,6 +5,7 @@ export class User
 	public lastname:string;
 	public email:string;
 	public password:string;
+	public repeatPassword:string;
 	public role:string;
 	public image:string;
 	public accessToken:string;

@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
   	login(form)
   	{
   		this.loginService.login(this.userLogin).subscribe(
-
 			res => {
 				localStorage.removeItem('name');
 				localStorage.removeItem('photo');
@@ -45,13 +44,13 @@ export class LoginComponent implements OnInit {
 				this.toastService.success('Bienvenido ' + res['data']['email'], 'Ok');
 			},
 		  	error => {	
-	  			this.toastService.error(error.error.message, error.status);
+	  			this.toastService.error((error.error.message != undefined && error.error.message != null && error.error.message != '') ? error.error.message : 'Ha ocurrido un error inesperado', error.status);
 		  	},
 		  	() => this.navigate()
 		);
 	}
 
  	navigate() {    
-    	this.router.navigateByUrl('/home');
+    	this.router.navigateByUrl('/keymarker');
   	}
 }

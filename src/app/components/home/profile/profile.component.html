@@ -1,0 +1,89 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h1 class="h3 mb-0 text-gray-800">Perfil</h1>
+</div>
+<hr>
+
+<div class="row">
+
+	<div class="col-lg-2 col-md-0"></div>
+
+	<div class="card o-hidden border-0 shadow-lg my-5 col-lg-8">
+	  <div class="card-body p-0">
+	      <!-- Nested Row within Card Body -->
+	    <div class="row">
+	        <div class="col-md-12">
+	          <div class="p-5">
+	            <div class="text-center">
+
+	            	<picture *ngIf="user.image && user.image != 'null'">
+									<img src="{{ user.image }}" class="image" width="120" height="100" />
+								</picture>
+								<picture *ngIf="!user.image || user.image == 'null'">
+									<img src="./assets/images/avatar-01.jpg" class="image" width="120" height="100" class="image" />
+								</picture>
+								<br><br>
+								<a href="#" data-toggle="modal" data-target="#uploadPhotoModal" class="btn btn-info">Subir foto</a>
+
+								<hr>
+	              <h1 class="h4 text-gray-900 mb-4">Hola, {{ user.name }} {{ user.lastname }}</h1>
+	            </div>
+	            <form class="user" #formProfile="ngForm" (ngSubmit)="updateProfile(formProfile)">
+	              <div class="form-group row">
+	                <div class="col-sm-6 mb-3 mb-sm-0">
+	                  <input type="text" class="form-control form-control-user" #name="ngModel" name="name" [(ngModel)]="user.name" id="exampleFirstName" placeholder="Nombres">
+	                </div>
+	                <div class="col-sm-6">
+	                  <input type="text" class="form-control form-control-user" #lastname="ngModel" name="lastname" [(ngModel)]="user.lastname" id="exampleLastName" placeholder="Apellidos">
+	                </div>
+	              </div>
+	              <div class="form-group row">
+	                <div class="col-sm-6 mb-3 mb-sm-0">
+	                  <input type="password" class="form-control form-control-user" #password="ngModel" name="password" [(ngModel)]="user.password" id="exampleInputPassword" placeholder="Contraseña">
+	                </div>
+	                <div class="col-sm-6">
+	                  <input type="password" class="form-control form-control-user" #repeatPassword="ngModel" name="repeatPassword" [(ngModel)]="user.repeatPassword" id="exampleRepeatPassword" placeholder="Repetir contraseña">
+	                </div>
+	              </div>
+	              
+	              <button type="submit" class="btn btn-primary btn-user">
+	              	Guardar cambios
+	              </button>
+	              
+	              <hr>
+	            </form>         
+	        	</div>
+	      	</div>
+	   	</div>
+	  </div>
+	</div>
+</div>		
+
+
+<!-- Upload photo Modal-->
+<div class="modal fade" id="uploadPhotoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Seleccione una foto</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+     	</div>
+      <div class="modal-body">
+				
+				<div class="text-center">
+					<picture *ngIf="user.image && user.image != 'null'">
+						<img src="{{ user.image }}" class="image" width="120" height="100" />
+					</picture>
+					<br>
+					<input type="file" (change)="loadImage($event)" />
+				</div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" (click)="uploadImage()">Guardar</button>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

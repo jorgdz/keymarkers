@@ -7,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class Error404Component implements OnInit {
 
-  constructor() { }
+	public message:string = 'Lo sentimos, pero no hemos encontrado este recurso.';
+  	constructor() { }
 
-  ngOnInit(): void {
-  }
+  	ngOnInit(): void {
+  	}
 
 }
