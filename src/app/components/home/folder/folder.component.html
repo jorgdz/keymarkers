@@ -93,49 +93,77 @@
 
 <!--Modal Add Marker-->
 <div class="modal fade" id="markerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Añadir marcador</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" (click)="clear()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
 
-        <form #formAddMarker="ngForm" (ngSubmit)="addMarker(formAddMarker)">
+        <form #formAddMarker="ngForm" (ngSubmit)="saveMarker(formAddMarker)">
+          
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Link:</label>
             <input type="text" class="form-control" id="name" name="link" #inputLink="ngModel" [(ngModel)]="marker.link" placeholder="Link del marcador" />
           </div>
+
           <div class="form-group">
             <label for="message-text" class="col-form-label">Nombre:</label>
             <input type="text" class="form-control" #inputName="ngModel" name="name" [(ngModel)]="marker.name" id="message-text" placeholder="Nombre del marcador" />
           </div>
           <div class="form-group">
-            <button type="button" class="btn btn-info" (click)="assocAccount()">{{ assoc ? 'Cerrar' : 'Asociar cuenta'}}</button>
+          	<div class="row">
+          		<div class="col-md-4">
+            		<button type="button" class="btn btn-info" (click)="assocAccount()"><i class="fas fa-fw fa-user"></i> {{ assoc ? 'Cerrar' : 'Datos de cuenta personal'}}</button>
+          		</div>
+          		<div class="col-sm-8" *ngIf="marker.link && marker.name">
+            		<span><em><strong>¿Tienes una cuenta?</strong> Guarda tus credenciales del marcador {{ marker.name }} y olvídate de preguntas como, ¿Olvidó su contraseña?</em></span>
+          		</div>
+          	</div>
           </div>
 	
 		      <div class="card" *ngIf="assoc && marker.name && marker.link">
 		      	<div class="card-body">
-							<div class="form-group">
-		            <label for="recipient-name" class="col-form-label">Correo:</label>
-		            <input type="email" class="form-control" id="email" name="email" #inputEmail="ngModel" [(ngModel)]="marker.email" placeholder="Correo para su cuenta en {{ marker.name }}" />
-		          </div>
-		          <div class="form-group">
-		            <label for="recipient-name" class="col-form-label">Usuario:</label>
-		            <input type="text" class="form-control" id="username" name="username" #inputUsername="ngModel" [(ngModel)]="marker.username" placeholder="Usuario para su cuenta en {{ marker.name }}" />
-		          </div>
+		      		<div class="row">
+		      			<div class="col-md-6">
+									<div class="form-group">
+				            <label for="recipient-name" class="col-form-label">Correo:</label>
+				            <input type="email" class="form-control" id="email" name="email" #inputEmail="ngModel" [(ngModel)]="marker.email" placeholder="Correo para su cuenta en {{ marker.name }}" />
+				          </div>
+		      			</div>
+		      			<div class="col-md-6">
+				          <div class="form-group">
+				            <label for="recipient-name" class="col-form-label">Usuario:</label>
+				            <input type="text" class="form-control" id="username" name="username" #inputUsername="ngModel" [(ngModel)]="marker.username" placeholder="Usuario para su cuenta en {{ marker.name }}" />
+				          </div>
+		      			</div>
+		      		</div>
 
 		          <div class="form-group">
 		            <label for="recipient-name" class="col-form-label">Clave:</label>
-		            <input type="text" class="form-control" id="pass" name="pass" #inputPass="ngModel" [(ngModel)]="marker.pass" placeholder="Clave para su cuenta en {{ marker.name }}" />
+		            <div class="row">
+			            <div class="col-md-9">
+			             	<div class="input-group">
+						          <input type="{{(showPass) ? 'text' : 'password'}}" class="form-control pwd" #inputPass="ngModel" name="pass" [(ngModel)]="marker.pass" placeholder="Clave para {{ marker.name }}">
+						          <span class="input-group-btn">
+						            <button class="btn btn-default reveal" (click)="showPassword()" type="button"><i class="fas fa-fw fa-eye"></i></button>
+						          </span>          
+						        </div>
+			            </div>
+			            <div class="col-md-3">
+			            	<button type="button" class="btn btn-success" (click)="generatePassword()">Generar</button>
+			            </div>
+		            </div>
+
 		          </div>
 		      	</div>
 		      </div>
 	
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		        <button type="button" class="btn btn-secondary" (click)="clear()" data-dismiss="modal">Cerrar</button>
 		        <button type="submit" class="btn btn-primary">Crear</button>
 		      </div>
         </form>

@@ -22,6 +22,7 @@ import { AddfolderComponent } from './components/home/addfolder/addfolder.compon
 // SERVICES
 import { LoginService } from './services/login.service';
 import { EmitService } from './services/emit/emit.service';
+import { PasswordService } from './services/password.service';
 
 
 // SERVICES EXTERNALS
@@ -99,7 +100,8 @@ const routes:Routes = [
   ],
   providers: [
     LoginService,
-    EmitService
+    EmitService,
+    PasswordService
   ],
   bootstrap: [AppComponent]
 })
