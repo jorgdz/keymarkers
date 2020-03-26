@@ -21,6 +21,12 @@ import { AddfolderComponent } from './components/home/addfolder/addfolder.compon
 
 // SERVICES
 import { LoginService } from './services/login.service';
+import { EmitService } from './services/emit/emit.service';
+
+
+// SERVICES EXTERNALS
+import { NgxSpinnerModule } from 'ngx-spinner';
+
 
 // GUARDS
 import { AuthGuard } from './guards/auth.guard';
@@ -79,6 +85,7 @@ const routes:Routes = [
     RegisterComponent,
     ProfileComponent,
     FolderComponent,
+    AddfolderComponent
   ],
   imports: [
     BrowserModule,
@@ -87,10 +94,12 @@ const routes:Routes = [
     RouterModule.forRoot(routes),
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxSpinnerModule,
     ToastrModule.forRoot()
   ],
   providers: [
-    LoginService
+    LoginService,
+    EmitService
   ],
   bootstrap: [AppComponent]
 })

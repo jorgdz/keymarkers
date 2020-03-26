@@ -3,7 +3,9 @@ import { UserLogin } from '../../models/user.login';
 import { User } from '../../models/user';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
+
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,7 @@ export class LoginComponent implements OnInit {
 
   	public lastLogin:any = {};
 
-  	constructor(private loginService: LoginService, private router: Router, private toastService:ToastrService) 
+  	constructor(private loginService: LoginService, private router: Router, private toastService:ToastrService, private spinnerService: NgxSpinnerService) 
   	{ 
   		this.userLogin = new UserLogin();
   		this.user = new User();
@@ -34,6 +36,8 @@ export class LoginComponent implements OnInit {
 
   	login(form)
   	{
+  		this.spinnerService.show();
+
   		this.loginService.login(this.userLogin).subscribe(
 			res => {
 				localStorage.removeItem('name');
@@ -41,9 +45,11 @@ export class LoginComponent implements OnInit {
 				this.loginService.setUserLoggedIn(res['data']['email']);
 				this.loginService.setToken(res['accessToken']);
 
+				this.spinnerService.hide();
 				this.toastService.success('Bienvenido ' + res['data']['email'], 'Ok');
 			},
 		  	error => {	
+		  		this.spinnerService.hide();
 	  			this.toastService.error((error.error.message != undefined && error.error.message != null && error.error.message != '') ? error.error.message : 'Ha ocurrido un error inesperado', error.status);
 		  	},
 		  	() => this.navigate()

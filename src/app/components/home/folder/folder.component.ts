@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FolderService } from '../../../services/folder.service';
-import { ToastrService } from 'ngx-toastr';
-import { Folder } from '../../../models/folder';
 import { Router } from '@angular/router';
+
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+
+import { Folder } from '../../../models/folder';
+import { Marker } from '../../../models/marker';
+
+import { FolderService } from '../../../services/folder.service';
+import { EmitService } from '../../../services/emit/emit.service';
 
 @Component({
   selector: 'app-folder',
@@ -11,38 +17,125 @@ import { Router } from '@angular/router';
   styleUrls: ['./folder.component.css'],
   providers: [FolderService]
 })
-export class FolderComponent implements OnInit {
+export class FolderComponent implements OnInit{
 
 	public _id:string;
 	public folder:Folder;
+  public marker:Marker;
+  public assoc:boolean = false;
 
-  	constructor(private activatedRouter: ActivatedRoute, private folderService:FolderService, private toastService: ToastrService, private router: Router) { }
+	constructor(private activatedRouter: ActivatedRoute, private folderService:FolderService, private toastService: ToastrService, 
+    private spinnerService:NgxSpinnerService, private emitService: EmitService, private router: Router) {
+    
+    this.folder = new Folder();
+    this.marker = new Marker();
+  }
 
-  	ngOnInit(): void {
-  		this.getId();
-  		this.getFolderById();
-  		this.folder = new Folder();
-  	}
+	ngOnInit(): void {
+		this.getFolderById();
+	}
 
-  	getId() {
-    	this.activatedRouter.params.subscribe(params => {
-      		this._id = params['id'];
-    	})
-  	}
+	getFolderById() {
+    this.spinnerService.show();
 
-  	getFolderById()
-  	{
-  		this.folderService.getFolderById(this._id).subscribe(
-  			res => {
-  				this.folder = res['data'];
-  				
-  				if (this.folder == undefined || this.folder == null) {
-  					this.router.navigateByUrl('/keymarker/error');
-  				}
-  			},
-  			err => {
-  				this.router.navigateByUrl('/keymarker');
-  			}
-  		);
-  	}
+  	this.activatedRouter.params.subscribe(params => {
+    	this._id = params['id'];
+      this.folderService.getFolderById(this._id).subscribe(
+        res => {
+          this.folder = res['data'];
+
+          this.spinnerService.hide();
+        },
+        err => {
+          this.router.navigateByUrl('/keymarker');
+          this.spinnerService.hide();
+        }
+      );
+  	})
+  }
+
+  delete()
+  {
+    this.spinnerService.show();
+
+    this.folderService.delete(this._id).subscribe(
+      res => {
+        this.emitService.emitChange(this._id);
+        
+        this.router.navigateByUrl('/keymarker');
+
+        this.spinnerService.hide();
+        
+        this.toastService.success(res['message'], 'Hecho !');
+      }
+    );
+  }
+
+  update (form)
+  {
+    this.spinnerService.show();
+
+    this.folderService.update(form.value, this._id).subscribe(
+      res => {
+        this.emitService.emitChange(this._id);
+
+        this.spinnerService.hide();
+
+        this.toastService.success(res['message'], 'Hecho !');
+      },
+      err => {
+        this.spinnerService.hide();
+
+        if (err.error != undefined && err.error.error != undefined) 
+        {
+          let Errors = err.error.error;
+          if (Array.isArray(Errors)) 
+          {
+            for (let i = 0; i < Errors.length; i++) 
+            {
+              this.toastService.error(Errors[i], err.status); 
+            }  
+          }
+          else
+          {
+            this.toastService.error(Errors, err.status);
+          }
+        }
+        else
+        {
+          console.log(err);
+          this.toastService.error(err, err.status);
+        }
+      }
+    );
+  }
+
+  assocAccount()
+  {
+    if (this.marker.name == '' || this.marker.name == null || this.marker.name == 'null' || this.marker.name == undefined || this.marker.link == '' || this.marker.link == null || this.marker.link == 'null' || this.marker.link == undefined) {
+      this.toastService.info('Por favor ingresar un marcador y un nombre descriptivo para el mismo', 'Ups!');
+    }
+    else
+    {
+      this.assoc = !this.assoc;
+    }
+  }
+
+  addMarker(form)
+  {
+    if (this.marker.name == '' || this.marker.name == null || this.marker.name == 'null' || this.marker.name == undefined || this.marker.link == '' || this.marker.link == null || this.marker.link == 'null' || this.marker.link == undefined) {
+      this.toastService.info('Por favor ingresar un marcador y un nombre descriptivo para el mismo', 'Ups!');
+    }
+    else
+    {
+      console.log(form.value);
+
+      this.marker.name = '';
+      this.marker.link = '';
+      this.marker.username = '';
+      this.marker.email = '';
+      this.marker.pass = '';
+      this.marker.folder = '';
+    }
+  }
 }

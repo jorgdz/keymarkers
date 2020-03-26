@@ -12,19 +12,19 @@
 	      <!-- Nested Row within Card Body -->
 	    <div class="row">
 	        <div class="col-md-12">
-	          <div class="p-5">
+	          	<div class="p-5">
 	            <div class="text-center">
 
 	            	<picture *ngIf="user.image && user.image != 'null'">
-									<img src="{{ user.image }}" class="image" width="120" height="100" />
-								</picture>
-								<picture *ngIf="!user.image || user.image == 'null'">
-									<img src="./assets/images/avatar-01.jpg" class="image" width="120" height="100" class="image" />
-								</picture>
-								<br><br>
-								<a href="#" data-toggle="modal" data-target="#uploadPhotoModal" class="btn btn-info">Subir foto</a>
+						<img src="{{ user.image }}" class="image" width="120" height="100" />
+					</picture>
+					<picture *ngIf="!user.image || user.image == 'null'">
+						<img src="./assets/images/avatar-01.jpg" class="image" width="120" height="100" class="image" />
+					</picture>
+					<br><br>
+					<a href="#" data-toggle="modal" data-target="#uploadPhotoModal" class="btn btn-info">Subir foto</a>
 
-								<hr>
+					<hr>
 	              <h1 class="h4 text-gray-900 mb-4">Hola, {{ user.name }} {{ user.lastname }}</h1>
 	            </div>
 	            <form class="user" #formProfile="ngForm" (ngSubmit)="updateProfile(formProfile)">
@@ -71,13 +71,13 @@
      	</div>
       <div class="modal-body">
 				
-				<div class="text-center">
-					<picture *ngIf="user.image && user.image != 'null'">
-						<img src="{{ user.image }}" class="image" width="120" height="100" />
-					</picture>
-					<br>
-					<input type="file" (change)="loadImage($event)" />
-				</div>
+		<div class="text-center">
+			<picture *ngIf="user.image && user.image != 'null'">
+				<img src="{{ user.image }}" class="image" width="120" height="100" />
+			</picture>
+			<br>
+			<input type="file" (change)="loadImage($event)" />
+		</div>
 
       </div>
       <div class="modal-footer">

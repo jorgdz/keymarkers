@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { User } from '../../models/user';
 import { Folder } from '../../models/folder';
 
 import { LoginService } from '../../services/login.service';
 import { FolderService } from '../../services/folder.service';
+import { EmitService } from '../../services/emit/emit.service';
 
-import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 declare var jQuery:any;
 declare var $:any;
@@ -22,10 +25,16 @@ export class HomeComponent implements OnInit {
     public fecha:Date;
     public folders: Array<Folder>;
 
-  	constructor(private loginService: LoginService, private folderService: FolderService, private router: Router) 
+  	constructor(private loginService: LoginService, private folderService: FolderService, private emitService:EmitService, private spinnerService: NgxSpinnerService, private router: Router) 
   	{ 
   		this.user = new User();
       this.fecha = new Date();
+
+      emitService.changeEmitted$.subscribe(
+        res => {
+          this.getFolders();
+        }
+      );
   	}
   
 
@@ -82,12 +91,18 @@ export class HomeComponent implements OnInit {
 
     getFolders ()
     {
+      this.spinnerService.show();
+      
       this.folderService.getFolders().subscribe(
         res => {
-          this.folders = res['data']
+          
+          this.folders = res['data'];
+          this.spinnerService.hide();
+
         },
         err => {
           console.log(err);
+          this.spinnerService.hide();
         }
       );
     }

@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../../models/user';
-import { LoginService } from '../../../services/login.service';
 import { Router } from '@angular/router';
+
+import { User } from '../../../models/user';
+
 import { UserService } from '../../../services/user.service';
+import { LoginService } from '../../../services/login.service';
+
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-profile',
@@ -13,14 +17,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfileComponent implements OnInit {
 
-		public user:User;
-		public fileUpload: Array<File>;
+	public user:User;
+	public fileUpload: Array<File>;
 
-  	constructor(private loginService: LoginService, private userService:UserService, private router: Router, private toastService:ToastrService) { 
+  	constructor(private loginService: LoginService, private userService:UserService, private router: Router, private toastService:ToastrService, private spinnerService:NgxSpinnerService) { 
   		this.user = new User();
   	}
 
   	ngOnInit(): void {
+  		this.spinnerService.show();
   		console.log('Profile');
 
   		let token = this.loginService.getToken();
@@ -29,9 +34,11 @@ export class ProfileComponent implements OnInit {
   			this.loginService.getUserAuth(token).subscribe(
   				res => {
     				this.user = res['data'];
+    				this.spinnerService.hide();
     			},
 				err => {
 			  		console.error(err);
+			  		this.spinnerService.hide();
 				}
   			);
   		}
@@ -45,19 +52,23 @@ export class ProfileComponent implements OnInit {
   		}
   		else
   		{
+  			this.spinnerService.show();
 
 	  		this.userService.updateUserAuth(this.user).subscribe(
 	  			res => {
-	  				if ((this.user.name + ' ' + this.user.lastname) != localStorage.getItem('name')) 
-						{
+	  				if ((this.user.name + ' ' + this.user.lastname) != localStorage.getItem('name')) {
 	  					localStorage.removeItem('name');
 	  					let name = this.user.name + ' ' + this.user.lastname;
 	  					localStorage.setItem('name', name);
 							
-							document.querySelector('#nameUser').textContent = name;
-						}
+						document.querySelector('#nameUser').textContent = name;
+					}
 
-						this.toastService.success(res['message'], res['status']);
+					this.user.password = '';
+					this.user.repeatPassword = '';
+					this.toastService.success(res['message'], res['status']);
+					
+					this.spinnerService.hide();
 	  			},
 	  			err => {
 	  				if (err.error != undefined && err.error.error != undefined) 
@@ -70,18 +81,17 @@ export class ProfileComponent implements OnInit {
 	          					this.toastService.error(Errors[i], err.status); 
 	          				}	
 		  				}
-		  				else
-		  				{
+		  				else {
 				  			this.toastService.error(Errors, err.status);
 		  				}
 	  				}
-	  				else
-	  				{
+	  				else {
 	  					console.log(err);
 	  				}
+
+	  				this.spinnerService.hide();
 	  			}
 	  		);
-
   		}
   	}
 
@@ -100,6 +110,8 @@ export class ProfileComponent implements OnInit {
   		}
   		else
   		{
+  			this.spinnerService.show();
+
 	  		this.userService.updatePhoto(this.fileUpload[0]).subscribe(
 	  			res => {
 	  				this.user.image = res['data']['image'];
@@ -108,9 +120,11 @@ export class ProfileComponent implements OnInit {
 	  				localStorage.setItem('photo', res['data']['image']);
 
 	  				this.toastService.success(res['message'], 'Hecho!');
+	  				this.spinnerService.hide();
 	  			},
 	  			err => {
 	  				this.toastService.error(err.message, err.status);
+	  				this.spinnerService.hide();
 	  			}
 	  		);
   		}
