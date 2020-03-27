@@ -77,15 +77,15 @@ export class HomeComponent implements OnInit {
 					  console.error(err);
 				  }
   			);
+         
+        // GET FOLDERS
+        this.getFolders(); 
+        this.router.navigateByUrl('/keymarker/dashboard');
       }
       else
       {
-        this.router.navigateByUrl('/');
+        this.loginService.logout();
       }
-
-
-      // GET FOLDERS
-      this.getFolders();
   	}
 
 
@@ -119,7 +119,7 @@ export class HomeComponent implements OnInit {
   	logout() 
   	{
  		  this.loginService.logout();
-      this.router.navigate(['/login']);
+      this.router.navigateByUrl('/login');
  	  }
 
 }

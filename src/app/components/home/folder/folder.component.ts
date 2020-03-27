@@ -9,8 +9,10 @@ import { Folder } from '../../../models/folder';
 import { Marker } from '../../../models/marker';
 
 import { FolderService } from '../../../services/folder.service';
+import { MarkerService } from '../../../services/marker.service';
 import { EmitService } from '../../../services/emit/emit.service';
 import { PasswordService } from '../../../services/password.service';
+import { ScrapeService } from '../../../services/scrape.service';
 
 @Component({
   selector: 'app-folder',
@@ -23,15 +25,19 @@ export class FolderComponent implements OnInit{
 	public _id:string;
 	public folder:Folder;
   public marker:Marker;
+  public markerSelect:Marker;
 
   public assoc:boolean = false;
   public showPass:boolean = false;
 
-	constructor(private activatedRouter: ActivatedRoute, private folderService:FolderService, private toastService: ToastrService, 
-    private spinnerService:NgxSpinnerService, private emitService: EmitService, private passwordService:PasswordService, private router: Router) {
+
+	constructor(private activatedRouter: ActivatedRoute, private folderService:FolderService, private markerService:MarkerService, private toastService: ToastrService, 
+    private spinnerService:NgxSpinnerService, private emitService: EmitService, private passwordService:PasswordService, private scrapeService:ScrapeService, 
+    private router: Router) {
     
     this.folder = new Folder();
     this.marker = new Marker();
+    this.markerSelect = new Marker();
   }
 
 	ngOnInit(): void {
@@ -65,7 +71,7 @@ export class FolderComponent implements OnInit{
       res => {
         this.emitService.emitChange(this._id);
         
-        this.router.navigateByUrl('/keymarker');
+        this.router.navigateByUrl('/keymarker/dashboard');
 
         this.spinnerService.hide();
         
@@ -114,7 +120,8 @@ export class FolderComponent implements OnInit{
   }
 
 
-  // Markers
+
+  /************* MARKERS*************/
   showPassword()
   {
     this.showPass = !this.showPass;
@@ -136,8 +143,13 @@ export class FolderComponent implements OnInit{
 
   clear()
   {
-    this.marker.name = '';
     this.marker.link = '';
+    this.marker.title = '';
+    this.marker.description = '';
+    this.marker.image = '';
+    this.marker.source = '';
+    this.marker.url = '';
+    this.marker.name = '';
     this.marker.username = '';
     this.marker.email = '';
     this.marker.pass = '';
@@ -162,26 +174,105 @@ export class FolderComponent implements OnInit{
     );
   }  
 
+  getLinkData()
+  {
+    if (this.marker.link != '' && this.marker.link != null && this.marker.link != 'null' && this.marker.link != undefined) 
+    {
+      this.spinnerService.show();
+
+      this.scrapeService.getLinkData(this.marker.link).subscribe(
+        res => {       
+          this.marker.title = res['data']['title'];
+          this.marker.description = res['data']['description'];
+          this.marker.image = res['data']['image'];
+          this.marker.source = res['data']['source'];
+          this.marker.url = res['data']['url'];
+
+          this.spinnerService.hide();
+        },
+        err => {
+          console.log(err);
+          this.toastService.error(err.error.error, err.status);
+          this.spinnerService.hide();
+        }
+      );    
+    }
+    else
+    {
+      this.marker.title = '';
+      this.marker.description = '';
+      this.marker.image = '';
+      this.marker.source = '';
+      this.marker.url = '';
+    }
+  }
+
+
+
 
   // CREATE A NEW MARKER FOR THIS FOLDER
   saveMarker(form)
   {
-    if (this.marker.name == '' || this.marker.name == null || this.marker.name == 'null' || this.marker.name == undefined || this.marker.link == '' || this.marker.link == null || this.marker.link == 'null' || this.marker.link == undefined) {
-      this.toastService.error('Por favor ingresar un marcador y un nombre descriptivo para el mismo', 'Ups!');
+    if (this.marker.name == '' || this.marker.name == null || this.marker.name == 'null' || this.marker.name == undefined || 
+      this.marker.link == '' || this.marker.link == null || this.marker.link == 'null' || this.marker.link == undefined 
+      || this.marker.title == '' || this.marker.url == '')
+    {      
+      this.toastService.error('Por favor ingresar un marcador válido, y un nombre descriptivo para el mismo', 'Ups!');
     }
     else
     {
+      this.spinnerService.show();
+      this.marker.folder = this._id;
+      
+      this.markerService.create(this.marker).subscribe(
+        res => {
+          this.getFolderById();
 
-      console.log(form.value);
-
-      this.marker.name = '';
-      this.marker.link = '';
-      this.marker.username = '';
-      this.marker.email = '';
-      this.marker.pass = '';
-      this.marker.folder = '';
-      this.assoc = false;
-
+          this.marker.link = '';
+          this.marker.title = '';
+          this.marker.description = '';
+          this.marker.image = '';
+          this.marker.source = '';
+          this.marker.url = '';
+          this.marker.name = '';
+          this.marker.username = '';
+          this.marker.email = '';
+          this.marker.pass = '';
+          this.marker.folder = '';
+          this.assoc = false;
+         
+          this.spinnerService.hide();
+          this.toastService.success(res['message'], 'Hecho !!');
+        },
+        err => {
+          this.spinnerService.hide();
+          console.log(err);
+          this.toastService.error(err.message, err.status);
+        }
+      );
     }
+  }
+
+  selectMarker(marker)
+  {
+    this.markerSelect = marker;
+  }
+
+  deleteMarker()
+  {
+    this.spinnerService.show();
+
+    this.markerService.delete(this.markerSelect._id).subscribe(
+      res => {
+        this.getFolderById();
+        this.spinnerService.hide();
+        this.toastService.success(res['message'], 'Hecho !!');
+      }, 
+      err => {
+        this.spinnerService.hide();
+        console.log(err);
+        this.toastService.error(err.message, err.status);
+      }
+    );
   }
 }

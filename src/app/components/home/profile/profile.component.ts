@@ -9,6 +9,9 @@ import { LoginService } from '../../../services/login.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
+declare var jQuery:any;
+declare var $:any;
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -95,7 +98,6 @@ export class ProfileComponent implements OnInit {
   		}
   	}
 
-
   	loadImage(file: any)
   	{
   		this.fileUpload = <Array<File>> file.target.files;
@@ -115,14 +117,19 @@ export class ProfileComponent implements OnInit {
 	  		this.userService.updatePhoto(this.fileUpload[0]).subscribe(
 	  			res => {
 	  				this.user.image = res['data']['image'];
+
 	  				document.querySelector('#imgUser').setAttribute('src', res['data']['image']);
 	  				localStorage.removeItem('photo');
 	  				localStorage.setItem('photo', res['data']['image']);
+	  				
+	  				this.fileUpload = [];
 
-	  				this.toastService.success(res['message'], 'Hecho!');
 	  				this.spinnerService.hide();
+	  				this.toastService.success(res['message'], 'Hecho!');
 	  			},
 	  			err => {
+	  				this.fileUpload = [];
+
 	  				this.toastService.error(err.message, err.status);
 	  				this.spinnerService.hide();
 	  			}

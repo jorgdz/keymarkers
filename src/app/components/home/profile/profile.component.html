@@ -76,7 +76,7 @@
 				<img src="{{ user.image }}" class="image" width="120" height="100" />
 			</picture>
 			<br>
-			<input type="file" (change)="loadImage($event)" />
+			<input type="file" id="avatarImg" (change)="loadImage($event)" accept="image/png, .jpeg, .jpg, image/gif" />
 		</div>
 
       </div>

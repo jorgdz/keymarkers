@@ -18,11 +18,14 @@ import { Error404Component } from './components/error404/error404.component';
 import { ProfileComponent } from './components/home/profile/profile.component';
 import { FolderComponent } from './components/home/folder/folder.component';
 import { AddfolderComponent } from './components/home/addfolder/addfolder.component';
+import { DashboardComponent } from './components/home/dashboard/dashboard.component';
 
 // SERVICES
 import { LoginService } from './services/login.service';
 import { EmitService } from './services/emit/emit.service';
 import { PasswordService } from './services/password.service';
+import { ScrapeService } from './services/scrape.service';
+import { MarkerService } from './services/marker.service';
 
 
 // SERVICES EXTERNALS
@@ -68,7 +71,13 @@ const routes:Routes = [
           path: 'add-folder',
           component: AddfolderComponent,
           canActivate: [AuthGuard]
+        },
+        {
+          path: 'dashboard',
+          component: DashboardComponent,
+          canActivate: [AuthGuard]
         }
+
       ]
   },
   {
@@ -86,7 +95,8 @@ const routes:Routes = [
     RegisterComponent,
     ProfileComponent,
     FolderComponent,
-    AddfolderComponent
+    AddfolderComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -101,7 +111,9 @@ const routes:Routes = [
   providers: [
     LoginService,
     EmitService,
-    PasswordService
+    PasswordService,
+    ScrapeService,
+    MarkerService
   ],
   bootstrap: [AppComponent]
 })
