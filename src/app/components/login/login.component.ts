@@ -57,6 +57,6 @@ export class LoginComponent implements OnInit {
 	}
 
  	navigate() {    
-    	this.router.navigateByUrl('/keymarker');
+    	this.router.navigateByUrl('/keymarker/dashboard');
   	}
 }

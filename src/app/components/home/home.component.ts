@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit {
          
         // GET FOLDERS
         this.getFolders(); 
-        this.router.navigateByUrl('/keymarker/dashboard');
+       // this.router.navigateByUrl('/keymarker/dashboard');
       }
       else
       {

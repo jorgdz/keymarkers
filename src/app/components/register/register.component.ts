@@ -63,6 +63,6 @@ export class RegisterComponent implements OnInit {
 	}
 
   navigate() {    
-    this.router.navigateByUrl('/keymarker');
+    this.router.navigateByUrl('/keymarker/dashboard');
   }
 }	

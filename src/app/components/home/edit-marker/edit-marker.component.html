@@ -1,0 +1,99 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h1 class="h3 mb-0 text-gray-800">Editar marcador</h1>
+</div>
+<hr>
+
+<div class="row">
+
+	<div class="col-lg-2 col-md-0"></div>
+
+	<div class="card o-hidden border-0 shadow-lg my-5 col-lg-8">
+	  <div class="card-body p-0">
+	    <div class="row">
+	        <div class="col-md-12">
+	          	<div class="p-5">
+		            <div class="text-center">
+		              <h1 class="h4 text-gray-900 mb-4">{{ marker.name }}</h1>
+		            </div>
+		            <form class="user" #formEditMarker="ngForm" (ngSubmit)="updateMarker(formEditMarker)">
+			            <div class="form-group row">
+			                <div class="col-md-12 mb-3 mb-sm-0">
+			                    <input type="text" class="form-control form-control-user" id="link" name="link" #inputLink="ngModel" [(ngModel)]="marker.link" (blur)="getLinkData()"placeholder="Link del marcador" />
+			                </div>
+			            </div>
+		            	<div class="form-group row" *ngIf="marker.url">
+							<a href="{{ marker.url }}" target="_blank">
+		        				<div class="col-md-12">
+			            			<div class="card">
+			            				<div class="card-horizontal">
+											<div class="img-square-wrapper" *ngIf="marker.image">
+			                        			<img class="" src="{{ marker.image }}" width="250" height="180" alt="{{ marker.title }}">
+			                    			</div>
+						                    <div class="card-body">
+						                        <h4 class="card-title">{{ marker.title }}</h4>
+						                        <p class="card-text">{{ marker.description }}</p>
+						                    </div>
+			            				</div>
+				            			<div class="card-footer">
+				                    		<small class="text-muted">{{ marker.source }}</small>
+				                		</div>
+			            			</div>
+		            			</div>
+							</a>		           	
+						</div>
+			            <div class="form-group row">
+			            	<div class="col-md-12 mb-3 mb-sm-0">
+			            		<input type="text" class="form-control form-control-user" #inputName="ngModel" name="name" [(ngModel)]="marker.name" id="message-text" placeholder="Nombre del marcador" />
+			            	</div>
+			            </div>
+						<div class="form-group row">
+							<div class="col-sm-12 text-center" *ngIf="marker.link && marker.name">
+			            		<span><em><strong>¿Tienes una cuenta?</strong> Guarda tus credenciales del marcador {{ marker.name }} y olvídate de preguntas como, ¿Olvidó su contraseña?</em></span>
+			          		</div>
+						</div>
+
+						<div class="card">
+					      	<div class="card-body">
+					      		<div class="row">
+					      			<div class="col-md-6">
+										<div class="form-group">
+								            <input type="email" class="form-control" id="email" name="email" #inputEmail="ngModel" [(ngModel)]="marker.email" placeholder="Correo para su cuenta en {{ marker.name }}" />
+								        </div>
+					      			</div>
+					      			<div class="col-md-6">
+							          	<div class="form-group">
+							            	<input type="text" class="form-control" id="username" name="username" #inputUsername="ngModel" [(ngModel)]="marker.username" placeholder="Usuario para su cuenta en {{ marker.name }}" />
+							          	</div>
+					      			</div>
+					      		</div>
+
+					          	<div class="form-group">
+						            <div class="row">
+							            <div class="col-md-9">
+							             	<div class="input-group">
+										        <input type="{{(showPass) ? 'text' : 'password'}}" class="form-control" #inputPass="ngModel" name="pass" [(ngModel)]="marker.pass" placeholder="Clave para {{ marker.name }}" />
+										        
+										        <span class="input-group-btn">
+										        	<button class="btn btn-info reveal" (click)="showPassword()" type="button"><i class="fas fa-fw fa-eye"></i></button>
+										        </span>          
+										   	</div>
+							            </div>
+							            <div class="col-md-3">
+							            	<button type="button" class="btn btn-success" (click)="generatePassword()">Generar</button>
+							            </div>
+						            </div>
+					          	</div>
+					      	</div>
+					    </div>
+		              	<hr>
+		              	<button type="submit" class="btn btn-primary btn-user">
+		              		Guardar cambios
+		              	</button>
+		             
+		            </form>         
+	        	</div>
+	      	</div>
+	   	</div>
+	  </div>
+	</div>
+</div>

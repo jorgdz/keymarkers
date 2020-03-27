@@ -19,6 +19,8 @@ import { ProfileComponent } from './components/home/profile/profile.component';
 import { FolderComponent } from './components/home/folder/folder.component';
 import { AddfolderComponent } from './components/home/addfolder/addfolder.component';
 import { DashboardComponent } from './components/home/dashboard/dashboard.component';
+import { EditMarkerComponent } from './components/home/edit-marker/edit-marker.component';
+
 
 // SERVICES
 import { LoginService } from './services/login.service';
@@ -73,6 +75,11 @@ const routes:Routes = [
           canActivate: [AuthGuard]
         },
         {
+          path: 'edit-marker/:id',
+          component: EditMarkerComponent,
+          canActivate: [AuthGuard]
+        },
+        {
           path: 'dashboard',
           component: DashboardComponent,
           canActivate: [AuthGuard]
@@ -96,7 +103,8 @@ const routes:Routes = [
     ProfileComponent,
     FolderComponent,
     AddfolderComponent,
-    DashboardComponent
+    DashboardComponent,
+    EditMarkerComponent
   ],
   imports: [
     BrowserModule,

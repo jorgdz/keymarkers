@@ -58,4 +58,52 @@ export class MarkerService {
 
   		return this.http.delete(this.api + '/api/marker/'+ id, httpOptions); 
 	}
+
+	getMarkerById (id)
+	{
+		let httpOptions;
+  		if (localStorage.getItem('accessToken') != '' && localStorage.getItem('accessToken') != null && localStorage.getItem('accessToken') != undefined &&  localStorage.getItem('accessToken') != 'null') 
+  		{
+	  		httpOptions = {
+		  	  headers: new HttpHeaders({
+		  	    'Content-Type':  'application/json',
+		  	    'authorization': localStorage.getItem('accessToken')
+		  	  })
+		  	};
+	  	}
+  		else
+  		{
+  			httpOptions = {
+		  	  headers: new HttpHeaders({
+		  	    'Content-Type':  'application/json'
+		  	  })
+		  	};
+  		}
+
+  		return this.http.get(this.api + '/api/marker/'+ id, httpOptions); 
+	}
+
+	update (marker:Marker, id)
+	{
+		let httpOptions;
+  		if (localStorage.getItem('accessToken') != '' && localStorage.getItem('accessToken') != null && localStorage.getItem('accessToken') != undefined &&  localStorage.getItem('accessToken') != 'null') 
+  		{
+	  		httpOptions = {
+		  	  headers: new HttpHeaders({
+		  	    'Content-Type':  'application/json',
+		  	    'authorization': localStorage.getItem('accessToken')
+		  	  })
+		  	};
+	  	}
+  		else
+  		{
+  			httpOptions = {
+		  	  headers: new HttpHeaders({
+		  	    'Content-Type':  'application/json'
+		  	  })
+		  	};
+  		}
+
+  		return this.http.put(this.api + '/api/marker/'+ id, marker, httpOptions); 
+	}
 }

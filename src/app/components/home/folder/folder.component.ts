@@ -56,7 +56,7 @@ export class FolderComponent implements OnInit{
           this.spinnerService.hide();
         },
         err => {
-          this.router.navigateByUrl('/keymarker');
+          this.router.navigateByUrl('/keymarker/dashboard');
           this.spinnerService.hide();
         }
       );

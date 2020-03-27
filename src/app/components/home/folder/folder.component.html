@@ -32,7 +32,7 @@
 <!--MARKERS-->
 <div class="row">
 
-	<div class="col-lg-3 col-md-6 col-sm-12" *ngFor="let marker of folder.markers">
+	<div *ngFor="let marker of folder.markers" class="col-lg-3 col-md-6 col-sm-12">
 		<div class="form-group">
 			<div class="card bg-light mb-3" style="width: 18rem;">
 				
@@ -43,7 +43,7 @@
 					<h5 class="card-title"><a href="{{ marker.url }}" target="_blank">{{ marker.name }}</a></h5>
 				</div>
 			  	<div class="card-footer bg-transparent border-success">
-			    	<a href="#" class="btn btn-info btn-circle"> <i class="fas fa-fw fa-pen"></i> </a>
+			    	<a [routerLink]="['/keymarker/edit-marker/' + marker._id]" class="btn btn-info btn-circle"> <i class="fas fa-fw fa-pen"></i> </a>
 					<a href="#" class="btn btn-danger btn-circle" data-toggle="modal" data-target="#deleteMarkerModal" (click)="selectMarker(marker)"> <i class="fas fa-fw fa-trash"></i> </a>
 			    	&nbsp;
 			    	<a href="{{ marker.url }}" target="_blank"><small>{{ (marker.source) ? marker.source : marker.link }}</small></a>
@@ -93,19 +93,19 @@
       <div class="modal-body">
 
         <form #formFolder="ngForm" (ngSubmit)="update(formFolder)">
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Nombre:</label>
-            <input type="text" class="form-control" id="name" name="name" #inputName="ngModel" [(ngModel)]="folder.name" placeholder="Nombre" />
-          </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Descripción:</label>
-            <textarea class="form-control" #inputDescription="ngModel" name="description" [(ngModel)]="folder.description" id="message-text" placeholder="Descripción"></textarea>
-          </div>
+          	<div class="form-group">
+           		<label for="recipient-name" class="col-form-label">Nombre:</label>
+           		<input type="text" class="form-control" id="name" name="name" #inputName="ngModel" [(ngModel)]="folder.name" placeholder="Nombre" />
+          	</div>
+          	<div class="form-group">
+	            <label for="message-text" class="col-form-label">Descripción:</label>
+            	<textarea class="form-control" #inputDescription="ngModel" name="description" [(ngModel)]="folder.description" id="message-text" placeholder="Descripción"></textarea>
+          	</div>
 		      
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+		    <div class="modal-footer">
+		    	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 		        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-		      </div>
+		    </div>
         </form>
 
       </div>
