@@ -3,3 +3,7 @@
 .image{
  	border-radius: 50%;
 }
+
+img {
+	height: 100%;
+}
